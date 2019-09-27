@@ -4,84 +4,66 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.SQLException;
 
-/** */
+/**
+ * Name: Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
+ * facility that will keep track of what products are produced.
+ */
 public class Controller {
 
-    /**
-     * Name: Dory Mauretour
-     * Date: 9/21/2019
-     * Purpose: Create software for a media player production facility that will
-     *          keep track of what products are produced.
-     */
+  @FXML private TableView<Item> existingProducts;
+  @FXML private TextField productNameField;
+  @FXML private TextField manufacturerField;
+  @FXML private ChoiceBox<String> itemtypeChoice;
+  @FXML private ComboBox<Integer> chooseQuantity;
 
-    @FXML private TableView<Item> existingProducts;
-    @FXML private TextField productNameField;
-    @FXML private TextField manufacturerField;
-    private ComboBox<String> cboTableName = new ComboBox<>();
+  public Controller() {}
 
+  @FXML
+  void addProduct(ActionEvent event) {
+    ObservableList<Item> data = existingProducts.getItems(); // Collects entry data
+    data.add( // Add data to existings products
+        new Item(
+            productNameField.getText(), manufacturerField.getText(), itemtypeChoice.getValue()));
 
-    @FXML
-    private ChoiceBox<String> itemtypeChoice;
-    @FXML
-    private Button btnAddProduct;
-    @FXML
-    private TextArea recordProduction;
+    productNameField.setText("");
+    manufacturerField.setText("");
+    itemtypeChoice.setValue("");
 
-    void recordProduction(ActionEvent event){
-    System.out.println("Record");
+    // prints statements for values
+    System.out.println(productNameField + " ");
+    System.out.println(manufacturerField + " ");
+    System.out.println(itemtypeChoice + " ");
+  }
+
+  public void initialize() { // Initializing
+    initializeComboBox();
+    initializeChoiceBox();
+  }
+
+  @FXML
+  private void initializeComboBox() {
+    ObservableList<Integer> data = chooseQuantity.getItems();
+    for (int i = 1; i <= 10; i++) { // compute values rom 1 to 10
+      data.add(i);
     }
 
-    @FXML
-    private ComboBox<Integer> chooseQuantity;
-    void chooseQuantity(ActionEvent event){
-        ObservableList<Integer> data = chooseQuantity.getItems();
-        cboTableName.getItems().add(" 1 ");
-        cboTableName.getItems().add(" 2 ");
-    }
+    chooseQuantity.getSelectionModel().selectFirst(); // Choose first selection
+    chooseQuantity.setEditable(true);
+  }
 
-    @FXML
-    void addProduct(ActionEvent event) {
-        final String JDBC_DRIVER = "org.h2.Driver";
-        final String DB_URL = "jdbc:h2:./res/ProductionLineTracker";
+  @FXML
+  private void initializeChoiceBox() {
+    ObservableList<String> data = itemtypeChoice.getItems(); // Get item value input
+    data.clear();
+    data.add("Audio");
+    data.add("Visual");
+    data.add("Audio Mobile");
+    data.add("Visual Mobile");
+  }
 
-        //  Database credentials
-        final String USER = "";
-        final String PASS = "";
-        Connection conn = null;
-        Statement stmt = null;
-
-        try {
-            // STEP 1: Register JDBC driver
-            Class.forName(JDBC_DRIVER);
-
-            //STEP 2: Open a connection
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-            //STEP 3: Execute a query
-            stmt = conn.createStatement();
-
-            String sql = "INSERT INTO Product(itemType, manufacturer, productName) VALUES ( 'AUDIO', 'Apple', 'iPod' );";
-
-            ResultSet rs = stmt.executeQuery(sql);
-
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    }
-
-
-
-
-
-
+  @FXML
+  public void recordProduction(ActionEvent actionEvent) {
+    System.out.println(chooseQuantity + " ");
+  }
+}
