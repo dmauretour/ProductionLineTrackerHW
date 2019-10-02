@@ -16,9 +16,6 @@ import java.sql.*;
  * facility that will keep track of what products are produced.
  */
 public class Main extends Application {
-  private TextArea ta = new TextArea();
-  private Button btShowJobs = new Button("Show Records");
-  private Statement stmt;
 
   @Override
   public void start(Stage primaryStage) throws Exception {
@@ -38,24 +35,5 @@ public class Main extends Application {
 
   public static void main(String[] args) {
     launch(args);
-    final String JDBC_DRIVER = "org.h2.Driver";
-    final String DB_URL = "jdbc:h2:./res/ProductionLineTracker";
-
-    //  Database credentials
-    final String USER = "";
-    final String PASS = "";
-    Connection conn = null;
-    Statement stmt = null;
-
-    try {
-
-      String sql =
-          "INSERT INTO Product(type, manufacturer, name) VALUES ( 'AUDIO', 'Apple', 'iPod' )"; // Get value in database
-      stmt.executeUpdate(sql);
-
-      // area
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } // end try catch
-  } // end method showData
+  }
 }

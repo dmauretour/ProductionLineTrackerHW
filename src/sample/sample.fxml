@@ -39,7 +39,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                             </rowConstraints>
                             <children>
-                                <Label text="   Product Name">
+                                <Label text="   field Name">
                                     <font>
                                         <Font size="14.0"/>
                                     </font>
@@ -54,8 +54,8 @@
                                         <Font size="14.0"/>
                                     </font>
                                 </Label>
-                                <TextField GridPane.columnIndex="1"/>
-                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                <TextField fx:id="productNameField" GridPane.columnIndex="1"/>
+                                <TextField fx:id="manufacturerField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                                 <ChoiceBox fx:id="itemtypeChoice" prefHeight="25.0" prefWidth="296.0"
                                            GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                             </children>
