@@ -1,65 +1,65 @@
 package sample;
 
-public abstract class Product implements Item {
+import javafx.collections.ObservableList;
 
-    private int id;
-    private String type;
-    private String manufacturer;
-    private String name;
+public class Product implements Item {
+  private int id;
+  private ObservableList<ItemType> type;
+  private String manufacturer;
+  private String name;
 
-    public int getId(){
-        return id;
-    }
+  public Product(String name, String manufacturer, ObservableList<ItemType> type) {
+    this.name = name;
+    this.manufacturer = manufacturer;
+    this.type = type;
+  }
 
-    public void setName(String name) {
+  public Product(String name, String manufacturer, ItemType audio) {}
 
-        this.name = name;
+  public int getId() {
+    return id;
+  }
 
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
+  @Override
+  public String getName() {
+    return name;
+  }
 
-    public String getName() {
+  public void setName(String name) {
+    this.name = name;
+  }
 
-        return name;
+  public void setManufacturer(String manufacturer) {
+    this.manufacturer = manufacturer;
+  }
 
-    }
+  public String getManufacturer() {
+    return manufacturer;
+  }
 
-    public void setManufacturer(String manufacturer) {
+  public ObservableList<ItemType> getType() {
+    return type;
+  }
 
-        this.manufacturer = manufacturer;
+  public void setType(ObservableList<ItemType> type) {
+    this.type = type;
+  }
 
-    }
-    public String getManufacturer() {
-
-        return manufacturer;
-
-    }
-    public void setType(String type) {
-
-        this.type = type;
-
-    }
-    public String getType() {
-
-        return type;
-
-    }
-
-    public Product(String name, String manufacturer, String type) {
-        this.name = name;
-        this.manufacturer = manufacturer;
-        this.type = type;
-
-    }
-
-    @Override
-    public String toString() {
-        return "Name: " + name + "\n"
-                + "Manufacturer: " + manufacturer + "\n"
-                + "Type: " + type;
-    }
+  @Override
+  public String toString() {
+    String str =
+        String.format(
+            "Name: %s\nManufacturer: %s\nType: %s", this.name, this.manufacturer, this.type);
+    return str;
+  }
 }
 
-
-
-
+class Widget extends Product {
+  Widget(String name, String manufacturer, ItemType type) {
+    super(name, manufacturer, type);
+  }
+}

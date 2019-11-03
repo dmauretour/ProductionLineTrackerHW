@@ -4,23 +4,20 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-
-import java.sql.Connection;
-import java.sql.*;
+import java.util.ArrayList;
 
 /**
- * Name: Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
- * facility that will keep track of what products are produced.
+ * @author : Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
+ *     facility that will keep track of what products are produced.
  */
 public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
     Parent root =
-        FXMLLoader.load(getClass().getResource("sample.fxml")); // Load table from class sample
+        FXMLLoader.load(
+            getClass().getResource("ProductionTable.fxml")); // Load table from class sample
     primaryStage.setTitle("Production Facility");
     // primaryStage.setScene(new Scene(root, 600, 525)); // Table format
 
@@ -35,5 +32,16 @@ public class Main extends Application {
 
   public static void main(String[] args) {
     launch(args);
+    Product productProduced = new Widget("iPod", "Apple", ItemType.AUDIO);
+
+    // test constructor used when creating production records from user interface
+    int numProduced = 3; // this will come from the combobox in the UI
+    int itemCount = 0;
+
+    for (int productionRunProduct = 0; productionRunProduct < numProduced; productionRunProduct++) {
+      ProductionRecord pr = new ProductionRecord(productProduced, itemCount++);
+      // using the iterator as the product id for testing
+      System.out.println(pr.toString());
+    }
   }
 }
