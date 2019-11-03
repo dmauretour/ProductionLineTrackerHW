@@ -52,7 +52,6 @@ public class ProductionController {
 
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
-
     }
   }
 
@@ -113,10 +112,7 @@ public class ProductionController {
     list.add(ItemType.VISUAL_MOBILE);
   }
 
-  /**
-   * Method that will add input into production database
-   *
-   */
+  /** Method that will add input into production database */
   @FXML
   public void recordProduction() {
     textRecordProduction.setText(
