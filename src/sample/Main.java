@@ -19,15 +19,11 @@ public class Main extends Application {
         FXMLLoader.load(
             getClass().getResource("ProductionTable.fxml")); // Load table from class sample
     primaryStage.setTitle("Production Facility");
-    // primaryStage.setScene(new Scene(root, 600, 525)); // Table format
 
     Scene scene = new Scene(root, 600, 525);
     primaryStage.setScene(scene);
     scene.getStylesheets().add(Main.class.getResource("guide.css").toExternalForm());
     primaryStage.show();
-
-    // Display JOB data
-    // btShowJobs.setOnAction(e-> showData());
   }
 
   public static void main(String[] args) {

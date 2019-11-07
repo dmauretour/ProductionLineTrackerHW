@@ -2,19 +2,17 @@ package sample;
 
 import javafx.collections.ObservableList;
 
-public class Product implements Item {
+public abstract class Product implements Item {
   private int id;
-  private ObservableList<ItemType> type;
+  private ItemType type;
   private String manufacturer;
   private String name;
 
-  public Product(String name, String manufacturer, ObservableList<ItemType> type) {
+  public Product(String name, String manufacturer, ItemType type) {
     this.name = name;
     this.manufacturer = manufacturer;
     this.type = type;
   }
-
-  public Product(String name, String manufacturer, ItemType audio) {}
 
   public int getId() {
     return id;
@@ -41,11 +39,11 @@ public class Product implements Item {
     return manufacturer;
   }
 
-  public ObservableList<ItemType> getType() {
+  public ItemType getType() {
     return type;
   }
 
-  public void setType(ObservableList<ItemType> type) {
+  public void setType(ItemType type) {
     this.type = type;
   }
 

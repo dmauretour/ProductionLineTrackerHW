@@ -9,3 +9,7 @@
 .button:hover {
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
+
+.root {
+    -fx-background-image: url("background.jpg");
+}

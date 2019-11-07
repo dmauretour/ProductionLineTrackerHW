@@ -30,6 +30,8 @@ public class ProductionRecord {
     this.dateProduced = new Date();
   }
 
+  public ProductionRecord() {}
+
   public void setProductionNum(int productionNum) {
     this.productionNum = productionNum;
   }

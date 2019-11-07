@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * @author : Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
@@ -49,6 +50,7 @@ public class ProductionController {
 
       // STEP 2: Open a connection
       conn = DriverManager.getConnection(DB_URL, USER, PASS);
+      Statement stmt = conn.createStatement();
 
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
@@ -72,19 +74,32 @@ public class ProductionController {
     itemTypeCol.setCellValueFactory(new PropertyValueFactory("type"));
 
     productionTable.setItems(productLine);
-    productLine.add(
-        new Product(
-            productNameField.getText(), manufacturerField.getText(), itemtypeChoice.getItems()));
+    ItemType type = itemtypeChoice.getValue();
+    String manufacturer = manufacturerField.getText();
+    String name = productNameField.getText();
+    switch (type) {
+      case AUDIO:
+        productLine.add(
+            new AudioPlayer(
+                name, manufacturer, "DSD/FLAC/ALAC/FF/MQA/Ogg-Vorbis/MP3/AAC", " M3U/PLS/WPL"));
+        break;
+      case VISUAL:
+        Screen newScreen = new Screen("720x480", 40, 22);
+        productLine.add(new MoviePlayer(name, manufacturer, newScreen, MonitorType.LCD));
+        break;
+      case AUDIO_MOBILE:
+        break;
+      case VISUAL_MOBILE:
+      default:
+        break;
+    }
 
-    ObservableList<Product> productChoice = FXCollections.observableArrayList();
-    chooseProduct.setItems(productChoice);
-    productChoice.add(
-        new Product(
-            productNameField.getText(), manufacturerField.getText(), itemtypeChoice.getItems()));
+    chooseProduct.getItems().clear();
+    chooseProduct.getItems().addAll(productLine);
 
     System.out.println(productNameField.getText());
     System.out.println(manufacturerField.getText());
-    System.out.println(itemtypeChoice.getItems());
+    System.out.println(itemtypeChoice.getValue());
   }
 
   /** Method that add quantity to combo box */
@@ -104,23 +119,20 @@ public class ProductionController {
   // Inputs entered value and add them in item type choice box
   @FXML
   private void initializeChoiceBox() {
-    ObservableList<ItemType> list = itemtypeChoice.getItems(); // Get item value input
-    list.clear();
-    list.add(ItemType.AUDIO);
-    list.add(ItemType.VISUAL);
-    list.add(ItemType.AUDIO_MOBILE);
-    list.add(ItemType.VISUAL_MOBILE);
+
+    itemtypeChoice.getItems().addAll(ItemType.values());
+
+    itemtypeChoice.getSelectionModel().selectFirst(); // Display first selection
   }
 
   /** Method that will add input into production database */
   @FXML
   public void recordProduction() {
-    textRecordProduction.setText(
-        "Name: "
-            + productNameField.getText()
-            + "\n Manufacturer: "
-            + manufacturerField.getText()
-            + "\n Type: "
-            + itemtypeChoice.getItems());
+    textRecordProduction.clear();
+    int quantity =
+        Integer.parseInt(String.valueOf(chooseQuantity.getSelectionModel().getSelectedItem()));
+    for (int i = 0; i < quantity; i++) {
+      textRecordProduction.appendText(chooseProduct.getSelectionModel().getSelectedItem() + "\n");
+    }
   }
 }
