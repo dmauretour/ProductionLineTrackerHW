@@ -11,6 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
+
+
  * @author : Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
  *     facility that will keep track of what products are produced.
  */
@@ -38,11 +40,12 @@ public class ProductionController {
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "org.h2.Driver";
-    final String DB_URL = "jdbc:h2:./res/res";
+    final String DB_URL = "jdbc:h2:./res/ProdDB";
 
     //  Database credentials
-    final String USER = "";
-    final String PASS = "";
+    final String USER = " ";
+    final String PASS = "dbpw";
+  //  System.out.println("Attempting to connect to database");
 
     try {
       // STEP 1: Register JDBC driver
@@ -51,10 +54,16 @@ public class ProductionController {
       // STEP 2: Open a connection
       conn = DriverManager.getConnection(DB_URL, USER, PASS);
       Statement stmt = conn.createStatement();
+  //    System.out.println("Successfully connected to database");
 
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
+      Alert a = new Alert(Alert.AlertType.ERROR);
+      a.show();
     }
+
+
+
   }
 
   /**
@@ -121,18 +130,28 @@ public class ProductionController {
   private void initializeChoiceBox() {
 
     itemtypeChoice.getItems().addAll(ItemType.values());
-
     itemtypeChoice.getSelectionModel().selectFirst(); // Display first selection
   }
 
   /** Method that will add input into production database */
   @FXML
   public void recordProduction() {
-    textRecordProduction.clear();
-    int quantity =
-        Integer.parseInt(String.valueOf(chooseQuantity.getSelectionModel().getSelectedItem()));
-    for (int i = 0; i < quantity; i++) {
-      textRecordProduction.appendText(chooseProduct.getSelectionModel().getSelectedItem() + "\n");
-    }
+//    textRecordProduction.clear();
+//    int quantity =
+//        Integer.parseInt(String.valueOf(chooseQuantity.getSelectionModel().getSelectedItem()));
+//    for (int i = 0; i < quantity; i++) {
+//      textRecordProduction.appendText(chooseProduct.getSelectionModel().getSelectedItem() + "\n");
+//    }
+      Product productProduced = new Widget("iPod", "Apple", ItemType.AUDIO);
+
+      int numProduced = 3; // this will come from the combobox in the UI
+      int itemCount = 0;
+
+      for (int productionRunProduct = 0; productionRunProduct < numProduced; productionRunProduct++) {
+          ProductionRecord pr = new ProductionRecord(productProduced, itemCount++);
+          // using the iterator as the product id for testing
+          System.out.println(pr.toString());
+          textRecordProduction.appendText(pr.toString() + "\n");
+      }
   }
 }
