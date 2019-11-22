@@ -23,6 +23,7 @@ public class ProductionRecord {
     this.dateProduced = dateProduced;
   }
 
+
   public ProductionRecord(Product product, int zeros) {
     String IdNumber = String.format("%05d", zeros);
     this.serialNum = product.getManufacturer().substring(0, 3) + product.getType() + IdNumber;

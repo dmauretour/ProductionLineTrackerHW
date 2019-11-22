@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * @author : Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
  *     facility that will keep track of what products are produced.
  */
-public class ProductionController {
+public class ProductionController<statement> {
 
   @FXML private TextField productNameField;
   @FXML private TextField manufacturerField;
@@ -30,22 +30,24 @@ public class ProductionController {
   @FXML private TableView<Product> productionTable;
   @FXML private TextArea textRecordProduction;
 
-  // public String code;
   private Connection conn = null;
 
   /** Initializing methods comboBox and choiceBox */
-  public void initialize() { // Initializing
+  public void initialize() throws SQLException { // Initializing
     initializeComboBox();
     initializeChoiceBox();
+//    loadProductList();
+//    loadProductionLog();
+    
 
     // JDBC driver name and database URL
     final String JDBC_DRIVER = "org.h2.Driver";
     final String DB_URL = "jdbc:h2:./res/ProdDB";
 
     //  Database credentials
-    final String USER = " ";
-    final String PASS = "dbpw";
-  //  System.out.println("Attempting to connect to database");
+    final String USER = "";
+    final String PASS = "";
+    System.out.println("Attempting to connect to database");
 
     try {
       // STEP 1: Register JDBC driver
@@ -54,17 +56,62 @@ public class ProductionController {
       // STEP 2: Open a connection
       conn = DriverManager.getConnection(DB_URL, USER, PASS);
       Statement stmt = conn.createStatement();
-  //    System.out.println("Successfully connected to database");
+      System.out.println("Successfully connected to database");
 
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
       Alert a = new Alert(Alert.AlertType.ERROR);
       a.show();
     }
-
-
-
+    
   }
+
+//  private void loadProductionLog() throws SQLException {
+//    ObservableList <ProductionRecord> prodRecordList = FXCollections.observableArrayList();
+//    String sql = "SELECT * FROM PRODUCTIONRECORD";
+//    Statement stmt = conn.createStatement();
+//    ResultSet rs = stmt.executeQuery(sql);
+//    while(rs.next()){
+//      Integer productionNum = rs.getInt(1);
+//      Integer productID = rs.getInt(2);
+//      String serialNum = rs.getString(3);
+//      String dateProduced = rs.getString(4);
+//
+////    ProductionRecord tempRecord = new ProductionRecord(productionNum, productID, serialNum, new Date());
+////      ArrayList <Product> tempList
+//    }
+//  }
+//
+//  private void loadProductList() throws SQLException {
+//    ObservableList <Product> obserProductLine = FXCollections.observableArrayList();
+//    String sql = "SELECT * FROM PRODUCT";
+//    Statement stmt = conn.createStatement();
+//    ResultSet rs = stmt.executeQuery(sql);
+//    while(rs.next()){
+//      Integer id = rs.getInt(1);
+//      String name = rs.getString(2);
+//      String manufacturer = rs.getString(3);
+//      String type = rs.getString(4);
+//      switch (type) {
+//        case "AU":
+//          obserProductLine.add(
+//                  new AudioPlayer(
+//                          name, manufacturer, "DSD/FLAC/ALAC/FF/MQA/Ogg-Vorbis/MP3/AAC", " M3U/PLS/WPL"));
+//          break;
+//        case "VI":
+//          Screen newScreen = new Screen("720x480", 40, 22);
+//          obserProductLine.add(new MoviePlayer(name, manufacturer, newScreen, MonitorType.LCD));
+//          break;
+//        case "AM":
+//          System.out.println("Not Applicable");
+//          break;
+//        case "VM":
+//          System.out.println("Not Applicable");
+//        default:
+//          break;
+//      }
+//    }
+//  }
 
   /**
    * Method addProduct add the input from the name, manufacturer and item type to the Product
@@ -73,7 +120,7 @@ public class ProductionController {
    * @param event
    */
   @FXML
-  void addProduct(ActionEvent event) {
+  void addProduct(ActionEvent event) throws SQLException {
 
     ObservableList<Product> productLine = FXCollections.observableArrayList();
 
@@ -102,6 +149,14 @@ public class ProductionController {
       default:
         break;
     }
+
+    String query = "INSERT INTO PRODUCT " + "(NAME, MANUFACTURER, TYPE)" + "VALUES(?, ?, ?)";
+    PreparedStatement stmnt = conn.prepareStatement(query);
+    stmnt.setString(1, productNameField.getText());
+    stmnt.setString(2, manufacturerField.getText());
+    stmnt.setString(3, itemtypeChoice.getValue().code);
+    stmnt.executeUpdate();
+
 
     chooseProduct.getItems().clear();
     chooseProduct.getItems().addAll(productLine);
@@ -140,9 +195,9 @@ public class ProductionController {
 //    int quantity =
 //        Integer.parseInt(String.valueOf(chooseQuantity.getSelectionModel().getSelectedItem()));
 //    for (int i = 0; i < quantity; i++) {
-//      textRecordProduction.appendText(chooseProduct.getSelectionModel().getSelectedItem() + "\n");
+//      textRecordProduction.appendText(chooseProduct.getSelectionModel().getSelectedItem() + "\n");0
 //    }
-      Product productProduced = new Widget("iPod", "Apple", ItemType.AUDIO);
+      Product productProduced = chooseProduct.getSelectionModel().getSelectedItem();
 
       int numProduced = 3; // this will come from the combobox in the UI
       int itemCount = 0;
