@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.util.ArrayList;
 
 /**
  * @author : Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
@@ -28,7 +27,5 @@ public class Main extends Application {
 
   public static void main(String[] args) {
     launch(args);
-
-
   }
 }

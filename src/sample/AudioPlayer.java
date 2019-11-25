@@ -1,9 +1,16 @@
 package sample;
 
+/** @author Dory Mauretour AudioPlayer extends Product implements MultimediaControl */
 public class AudioPlayer extends Product implements MultimediaControl {
-  String audioSpecification;
-  String mediaType;
+  private String audioSpecification;
+  private String mediaType;
 
+  /**
+   * @param name pass a string
+   * @param manufacturer pass a string
+   * @param audioSpecification pass a string
+   * @param mediaType pass a string
+   */
   public AudioPlayer(
       String name, String manufacturer, String audioSpecification, String mediaType) {
     super(name, manufacturer, ItemType.AUDIO);
@@ -11,6 +18,11 @@ public class AudioPlayer extends Product implements MultimediaControl {
     this.mediaType = mediaType;
   }
 
+  /**
+   * setters and getters
+   *
+   * @return audioSpecification
+   */
   public String getAudioSpecification() {
     return this.audioSpecification;
   }
@@ -43,6 +55,11 @@ public class AudioPlayer extends Product implements MultimediaControl {
     System.out.println("Next");
   }
 
+  /**
+   * ToString
+   *
+   * @return string
+   */
   public String toString() {
     return String.format(
         "%s\nSupported Audio Formats: %s\nSupported Playlist Formats: %s",

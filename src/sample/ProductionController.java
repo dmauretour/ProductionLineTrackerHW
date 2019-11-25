@@ -14,14 +14,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
  * @author : Dory Mauretour Date: 9/21/2019 Purpose: Create software for a media player production
  *     facility that will keep track of what products are produced.
  */
+@SuppressWarnings("unchecked")
 public class ProductionController {
 
   @FXML private TextField productNameField;
@@ -39,31 +38,24 @@ public class ProductionController {
   @FXML private TextField employeePassword;
   @FXML private TextArea textAreaEmployee;
 
-
   private Connection conn;
   private Statement stmt;
   private ObservableList<Product> productLine;
   private int productLineIndex = 0;
-  private ProductionRecord prodRecord;
-  private Product productFromDB;
-  private Employee employeeDetails;
-  private ArrayList<ProductionRecord> pr = new ArrayList();
-  ObservableList<ProductionRecord> prodRecordList = FXCollections.observableArrayList();
-
-
+  final ObservableList<ProductionRecord> prodRecordList = FXCollections.observableArrayList();
 
   /** Initializing methods comboBox and choiceBox */
   public void initialize() throws SQLException { // Initializing
     initializeComboBox();
     initializeChoiceBox();
     connection();
-   // loadProductList();
     setupProductLineTable();
+    loadProductList();
+    loadProductionLog();
     showProduction();
-
   }
 
-  public void connection(){
+  public void connection() {
     try {
       // JDBC driver name and database URL
       String JDBC_DRIVER = "org.h2.Driver";
@@ -73,13 +65,13 @@ public class ProductionController {
       String USER = "";
       String PASS = "";
       System.out.println("Attempting to connect to database");
-//      try {
-//        Properties prop = new Properties();
-//        prop.load(new FileInputStream("res/properties"));
-//        PASS = prop.getProperty("password");
-//      } catch(Exception e){
-//        System.out.println("Database error");
-//      }
+      //      try {
+      //        Properties prop = new Properties();
+      //        prop.load(new FileInputStream("res/properties"));
+      //        PASS = prop.getProperty("password");
+      //      } catch(Exception e){
+      //        System.out.println("Database error");
+      //      }
       // STEP 2: Open a connection
       conn = DriverManager.getConnection(DB_URL, USER, PASS);
       stmt = conn.createStatement();
@@ -89,33 +81,34 @@ public class ProductionController {
       e.printStackTrace();
     }
   }
-    /**
-     * The setupProductLineTable method sets up the table view.
-     */
+  /** The setupProductLineTable method sets up the table view. */
   private void setupProductLineTable() {
 
     productLine = FXCollections.observableArrayList();
+    productIdCol.setCellValueFactory(new PropertyValueFactory("id"));
     productNameCol.setCellValueFactory(new PropertyValueFactory("name"));
     manufacturerCol.setCellValueFactory(new PropertyValueFactory("manufacturer"));
     itemTypeCol.setCellValueFactory(new PropertyValueFactory("type"));
     productionTable.setItems(productLine);
   }
 
-    /**
-     * The loadProductList method gets product items from the database and adds them to the
-     * productLine observable list.
-     *
-     * @throws SQLException if sql statement is valid.
-     */
+  /**
+   * The loadProductList method gets product items from the database and adds them to the
+   * productLine observable list.
+   *
+   * @throws SQLException if sql statement is valid.
+   */
   private void loadProductList() throws SQLException {
     String sql = "SELECT * FROM PRODUCT";
     ResultSet rs = stmt.executeQuery(sql);
     while (rs.next()) {
+      int id = rs.getInt(1);
       String name = rs.getString(2);
       ItemType type = ItemType.valueOf(rs.getString(3));
       String manufacturer = rs.getString(4);
 
-      productFromDB = new Widget(name, manufacturer, type);
+      Product productFromDB = new Widget(name, manufacturer, type);
+      productFromDB.setId(id);
       productLine.add(productFromDB);
 
       chooseProduct.getItems().add(productLine.get(productLineIndex++));
@@ -131,17 +124,21 @@ public class ProductionController {
   public void addProduct() throws SQLException {
     String name = productNameField.getText();
     String manufacturer = manufacturerField.getText();
-    ItemType type = itemtypeChoice.getValue();
-    String query = "INSERT INTO PRODUCT (NAME, TYPE,  MANUFACTURER) VALUES(?, ?, ?)";
-    PreparedStatement prodToDB = conn.prepareStatement(query);
-    prodToDB.setString(1, name);
-    prodToDB.setString(2, type.toString());
-    prodToDB.setString(3,  manufacturer);
-    prodToDB.executeUpdate();
-    productNameField.clear();
-    manufacturerField.clear();
-    itemtypeChoice.getSelectionModel().clearSelection();
-    loadProductList();
+    ItemType type = itemtypeChoice.getValue(); // itemtypeChoice.getSelectionModel().toString();
+    if (name != null && manufacturer != null && type != null) {
+      String query = "INSERT INTO PRODUCT (NAME, TYPE,  MANUFACTURER) VALUES(?, ?, ?)";
+      PreparedStatement prodToDB = conn.prepareStatement(query);
+      prodToDB.setString(1, name);
+      prodToDB.setString(2, type.toString());
+      prodToDB.setString(3, manufacturer);
+      prodToDB.executeUpdate();
+      productNameField.clear();
+      manufacturerField.clear();
+      itemtypeChoice.getSelectionModel().clearSelection();
+      loadProductList();
+    } else {
+      System.out.println("Invalid Input");
+    }
   }
 
   /** Method that add quantity to combo box */
@@ -171,11 +168,11 @@ public class ProductionController {
   public void recordProduction() throws SQLException {
 
     Product productProduced = chooseProduct.getSelectionModel().getSelectedItem();
-   String quantity = String.valueOf(chooseQuantity.getValue());
-   int numProduced = Integer.parseInt(quantity);
-   ArrayList<ProductionRecord> pr = new ArrayList();
+    String quantity = String.valueOf(chooseQuantity.getValue());
+    int numProduced = Integer.parseInt(quantity);
+    ArrayList<ProductionRecord> pr = new ArrayList();
     for (int productionRunProduct = 0; productionRunProduct < numProduced; productionRunProduct++) {
-      prodRecord = new ProductionRecord(productProduced, productionRunProduct);
+      ProductionRecord prodRecord = new ProductionRecord(productProduced, productionRunProduct);
       // using the iterator as the product id for testing
       pr.add(prodRecord);
     }
@@ -185,8 +182,7 @@ public class ProductionController {
     showProduction();
   }
   /**
-   * loadProductionLog method stores record
-   * production objects from the database into a record
+   * loadProductionLog method stores record production objects from the database into a record
    * production array.
    *
    * @throws SQLException Checks if the sql statement is valid.
@@ -201,13 +197,12 @@ public class ProductionController {
       Date dateProduced = rs.getDate(4);
 
       ProductionRecord tempRecord =
-              new ProductionRecord(productionNum, productName, serialNum, dateProduced);
+          new ProductionRecord(productionNum, productName, serialNum, dateProduced);
       prodRecordList.add(tempRecord);
     }
   }
   /**
-   * showProduction method outputs record p
-   * roduction items from the database to the production log
+   * showProduction method outputs record p roduction items from the database to the production log
    * text area.
    */
   private void showProduction() {
@@ -216,14 +211,11 @@ public class ProductionController {
     for (int i = 0; i < prodRecordList.size(); i++) {
       textRecordProduction.appendText(prodRecordList.get(i).toString() + "\n");
     }
-
-
   }
   /**
    * The addToProdcutionDB adds record details into the production record table.
    *
-   * @param prodArray receives an array list that carries record
-   *                  production type objects.
+   * @param prodArray receives an array list that carries record production type objects.
    * @throws SQLException Checks if the sql statement is valid.
    */
   private void addToProductionDB(ArrayList<ProductionRecord> prodArray) throws SQLException {
@@ -233,23 +225,21 @@ public class ProductionController {
     for (int i = 0; i < prodArray.size(); i++) {
       addRecord.setString(1, prodArray.get(i).getName());
       addRecord.setString(2, prodArray.get(i).getSerialNum());
-      addRecord.setTimestamp(
-          3, new Timestamp(prodArray.get(i).getProdDate().getTime()));
-//     addRecord.setString(4, employeeDetails.getUsername());
+      addRecord.setTimestamp(3, new Timestamp(prodArray.get(i).getProdDate().getTime()));
+      //     addRecord.setString(4, employeeDetails.getUsername());
       addRecord.executeUpdate();
     }
   }
   /**
-   * employeeAccount method adds employee objects
-   * created into the employee table in the database.
+   * employeeAccount method adds employee objects created into the employee table in the database.
    *
    * @throws SQLException Checks if the sql statement used is valid.
    */
-    @FXML
-    void createEmpoyeeAcc() throws SQLException {
+  @FXML
+  void createEmpoyeeAcc() throws SQLException {
     String employeeFullName = employeeName.getText();
     String employeePass = employeePassword.getText();
-    employeeDetails = new Employee(employeeFullName, employeePass);
+    Employee employeeDetails = new Employee(employeeFullName, employeePass);
 
     String prodQuery = "INSERT INTO EMPLOYEE (NAME, PASSWORD, USERNAME, EMAIL) VALUES (?, ?, ?, ?)";
     PreparedStatement addEmployee = conn.prepareStatement(prodQuery);
@@ -262,10 +252,10 @@ public class ProductionController {
     employeeName.clear();
     employeePassword.clear();
     textAreaEmployee.appendText(employeeDetails.toString() + "\n");
+  }
 
-    }
-    @FXML
-    void createEmpoyeeBtn(ActionEvent event) throws SQLException {
+  @FXML
+  void createEmpoyeeBtn(ActionEvent event) throws SQLException {
     createEmpoyeeAcc();
-    }
+  }
 }

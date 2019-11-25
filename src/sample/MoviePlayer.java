@@ -1,9 +1,16 @@
 package sample;
 
+/** @author Dory Mauretour MoviePlayer extends Product implements MultimediaControl */
 public class MoviePlayer extends Product implements MultimediaControl {
-  private Screen screen;
-  private MonitorType monitorType;
+  private final Screen screen;
+  private final MonitorType monitorType;
 
+  /**
+   * @param name pass a string
+   * @param manufacturer pass a string
+   * @param screen pass Screen
+   * @param monitorType pass MonitorType
+   */
   public MoviePlayer(String name, String manufacturer, Screen screen, MonitorType monitorType) {
     super(name, manufacturer, ItemType.VISUAL);
     this.screen = screen;
@@ -26,6 +33,11 @@ public class MoviePlayer extends Product implements MultimediaControl {
     System.out.println("Next movie");
   }
 
+  /**
+   * toString
+   *
+   * @return string
+   */
   @Override
   public String toString() {
     return String.format("%s\nScreen: %s\nMonitorType: %s", super.toString(), screen, monitorType);
