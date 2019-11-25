@@ -125,5 +125,27 @@
                 </AnchorPane>
             </content>
         </Tab>
+      <Tab text="Employee">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TextField fx:id="employeeName" layoutX="28.0" layoutY="48.0" />
+                  <TextField fx:id="employeePassword" layoutX="28.0" layoutY="121.0" />
+                  <TextArea fx:id="textAreaEmployee" layoutX="297.0" layoutY="46.0" prefHeight="200.0" prefWidth="253.0" />
+                  <Button fx:id="employeeButton" layoutX="28.0" layoutY="212.0" mnemonicParsing="false" onAction="#createEmpoyeeBtn" prefHeight="25.0" prefWidth="180.0" text="Create Employee" />
+                  <Label layoutX="28.0" layoutY="14.0" prefHeight="17.0" prefWidth="161.0" text="Name (first Last)">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="28.0" layoutY="95.0" prefHeight="17.0" prefWidth="258.0" text="Password (lower/upper case, special)">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+        </content>
+      </Tab>
     </tabs>
 </TabPane>
