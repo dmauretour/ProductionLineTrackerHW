@@ -247,3 +247,5 @@ setDeptId() will call getDeptId() to get the id from the user before validId() i
 
 As there are now two values to be displayed (code, deptId) create a toString() method that will override the output and allow you to simply display the value of the object to the screen
 
+DIAGRAM
+- See diagram.jpg
