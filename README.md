@@ -1,7 +1,7 @@
-* PRODUCTION LINE TRACKER
+# PRODUCTION LINE TRACKER
 
-* Getting Started
-Scenario
+# Getting Started
+- Scenario
 
 You have been hired to create software for a media player production facility that will keep track of what products are produced.
 
@@ -249,15 +249,15 @@ setDeptId() will call getDeptId() to get the id from the user before validId() i
 
 As there are now two values to be displayed (code, deptId) create a toString() method that will override the output and allow you to simply display the value of the object to the screen
 
-* DIAGRAM
+# DIAGRAM
 - See diagram.jpg
 
-* DATABASE DIAGRAM
+# DATABASE DIAGRAM
 - See DatabaseDiagram.jpg
 
-* SOFTWARE USED
-- IntelliJ : IDE
+# SOFTWARE USED
+- IntelliJ : javaFx
 - Scene Builder
 
-* AUTHOR
+# AUTHOR
 - Dory Mauretour
