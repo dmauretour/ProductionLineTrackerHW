@@ -137,7 +137,10 @@ public class ProductionController {
       itemtypeChoice.getSelectionModel().clearSelection();
       loadProductList();
     } else {
-      System.out.println("Invalid Input");
+        Alert b = new Alert(Alert.AlertType.ERROR);
+        b.setAlertType(Alert.AlertType.ERROR);
+        b.setContentText("INVALID INPUT");
+        b.show();
     }
   }
 
